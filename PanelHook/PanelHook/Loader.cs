@@ -49,14 +49,12 @@ namespace PanelHook
 
         private void CreatedSetup()
         {
-            //todo: HookManager onCreated
-            //HookManager.OnCreated();
+            HookManager.OnCreated();
         }
 
         private void LoadedSetup()
         {
-            //todo: HookManager onLoaded
-            //HookManager.OnLoaded();
+            HookManager.OnLoaded();
             initialized = true;
         }
 
@@ -64,15 +62,13 @@ namespace PanelHook
         {
             if (initialized)
             {
-                //todo: HookManager unloading
-                //HookManager.OnUnloading();
+                HookManager.OnUnloading();
             }
         }
 
         private void ReleasedCleanup()
         {
-            //todo: HookManager onRelease
-            //HookManager.OnRelease();
+            HookManager.OnReleased();
         }
     }
 }

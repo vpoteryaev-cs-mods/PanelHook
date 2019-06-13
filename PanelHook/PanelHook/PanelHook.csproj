@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HookedObjects.cs" />
+    <Compile Include="HookManager.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="ModInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
