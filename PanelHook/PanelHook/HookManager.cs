@@ -15,9 +15,6 @@ namespace PanelHook
          *
         */
 
-        //same as CilossalFramework.UI.MouseEventHandler
-        //public delegate void pHandlerPointer(UIComponent sender, UIMouseEventParameter eventParam);
-
         public static bool IsHooked(MouseEventHandler handlerPointer, object obj)
         {
             return _hooksPtrDict.TryGetValue(handlerPointer, out HookedObjects objects) ? objects.IsHooked(obj) : false;
@@ -29,15 +26,21 @@ namespace PanelHook
             {
                 if (hookedObjects.IsHooked(obj))
                 {
+#if DEBUG
                     Debug.LogErrorFormat("PanelHook: HookManager.AddHook() - The object \"{0}\" is already hooked by pointer \"{1}\"", ((UIComponent)obj).name, ptr);
+#endif
                     return;
                 }
+#if DEBUG
                 Debug.LogFormat("PanelHook: HookManager.AddHook() - add new object {0} to registered handler {1}", ((UIComponent)obj).name, ptr);
+#endif
                 hookedObjects.AddObject(obj, desc);
             }
             else
             {
+#if DEBUG
                 Debug.LogFormat("PanelHook: HookManager.AddHook() - add object {0} to handler {1}", ((UIComponent)obj).name, ptr);
+#endif
                 hookedObjects = new HookedObjects();
                 hookedObjects.AddObject(obj, desc);
                 _hooksPtrDict.Add(ptr, hookedObjects);
@@ -51,7 +54,9 @@ namespace PanelHook
                 where qObjects.Equals(obj)
                 select qObjects;
             numHooks = query.Count();
+#if DEBUG
             Debug.LogFormat("PanelHook: HookManager.AddHook() - numHooks = {0}", numHooks);
+#endif
             if (numHooks == 1)
                 SetHandler(obj);
         }
@@ -66,7 +71,9 @@ namespace PanelHook
                 where qObjects.Equals(obj)
                 select qObjects;
             numHooks = query.Count();
+#if DEBUG
             Debug.LogFormat("PanelHook: HookManager.RemoveHook() - numHooks = {0}", numHooks);
+#endif
             if (numHooks == 1)
                 RemoveHandler(obj);
             else if (numHooks == 0)
@@ -89,9 +96,7 @@ namespace PanelHook
          *
         */
 
-        //todo: Custom UI Panel derived from UIPanel
-        //see notes on GitHub project (https://github.com/vpoteryaev/CS-PanelHook/projects/1#card-22746629)
-        //internal static PanelHook.UI.HooksPanel hooksPanel;
+        internal static PanelHook.UI.HooksPanel hooksPanel;
 
         static readonly Dictionary<MouseEventHandler, HookedObjects> _hooksPtrDict;
 
@@ -114,8 +119,7 @@ namespace PanelHook
 
         internal static void OnLoaded()
         {
-        //todo: create the panel instance (https://github.com/vpoteryaev/CS-PanelHook/projects/1#card-22746629)
-        //hooksPanel = (PanelHook.UI.HooksPanel)UIView.GetAView().AddUIComponent(typeof(PanelHook.UI.HooksPanel));
+            hooksPanel = (PanelHook.UI.HooksPanel)UIView.GetAView().AddUIComponent(typeof(PanelHook.UI.HooksPanel));
         }
 
         internal static void OnUnloading()
@@ -128,10 +132,8 @@ namespace PanelHook
             foreach (object obj in query.Distinct())
                 RemoveHandler(obj);
 
-            //todo: HookPanel
-            //release resources
-            //if (hooksPanel != null)
-            //    GameObject.Destroy(hooksPanel);
+            if (hooksPanel != null)
+                GameObject.Destroy(hooksPanel);
         }
 
         internal static void OnReleased()
@@ -141,24 +143,39 @@ namespace PanelHook
 
         private static void SetHandler(object obj)
         {
+#if DEBUG
             Debug.LogFormat("PanelHook: HookManager.SetHandler() - called for object {0}", ((UIComponent)obj).name);
+#endif
             ((UIComponent)obj).eventClicked += MouseHandler;
         }
 
         private static void RemoveHandler(object obj)
         {
+#if DEBUG
             Debug.LogFormat("PanelHook: HookManager.RemoveHandler() - called for object {0}", ((UIComponent)obj).name);
+#endif
             ((UIComponent)obj).eventClicked -= MouseHandler;
         }
 
         private static void MouseHandler(UIComponent sender, UIMouseEventParameter eventParam)
         {
+#if DEBUG
             Debug.LogFormat("PanelHook: HookManager.MouseHandler() - called for {0}", sender.name);
+#endif
+            if (hooksPanel.isVisible) return;
 
-            //todo: HookPanel
-            // - positioning
-            // - actions management
-            // - show panel
+            //note: improve positioning
+            hooksPanel.pivot = sender.pivot;
+            hooksPanel.position = sender.position;
+
+            foreach (KeyValuePair<MouseEventHandler, HookedObjects> kvPair in _hooksPtrDict)
+            {
+                if (kvPair.Value.IsHooked(sender))
+                {
+                    hooksPanel.AddAction(kvPair.Key, kvPair.Value.GetDescription(sender), sender, eventParam);
+                }
+            }
+            hooksPanel.Show();
         }
     }
 }
