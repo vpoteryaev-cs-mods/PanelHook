@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ColossalFramework.Plugins;
-using ColossalFramework.UI;
-using ICities;
-using System.Reflection;
-using UnityEngine;
+﻿using ICities;
 
 namespace PanelHook
 {

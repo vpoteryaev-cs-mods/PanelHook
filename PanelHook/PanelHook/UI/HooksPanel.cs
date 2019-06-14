@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using ColossalFramework.Globalization;
-using ColossalFramework.Plugins;
 using ColossalFramework.UI;
 using UnityEngine;
 

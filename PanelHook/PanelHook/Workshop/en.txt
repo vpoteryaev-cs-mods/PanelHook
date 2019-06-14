@@ -1,0 +1,27 @@
+[h1]Panel Hook (beta) for modders[/h1]
+[b]This mod is designed for modders. If you are not a modder, just subscribe to this mod and allow it in the game if it is stated as the dependency in another mod.[/b]
+
+[h1]Forewords[/h1]
+When writing your own mod, too many time is spent on placing and precise positioning, let's say, buttons on the building information panel.
+Then may happens that another mod also places something in the same panel, overlapping your changes ... or the developers have changed something ... etc.
+As an example, when using very useful ModTools, it's annoys sometimes that the buttons and labels of the mod on the panels overlap with the other labels, and sometimes the interaction elements.
+
+This mod will allow you to minimize your time-wasting, and unify the interaction of users with different mods, without changing anything in the panels.
+
+[h1]Purpose[h1]
+With this mod, although called [b]Panel[/b]Hook, you'll be able to attach your own mouse click handler to any element derived from the UIComponent.
+You just have to define the element you are interested and provide the PanelHook with the following:
+[olist]
+	[*] Your handler - it's standard ColossalFramework.UI.MouseEventHandler.
+	[*] Element itself (mod accepts 'object' class type).
+	[*] The description that will be displayed to the user in the drop-down list for selection when clicking on an element.
+[/olist]
+As a result, when you click on an element, the panel will appear with the drop-down list of actions and the handler will be called accordingly after choosing action.
+One handler can be hooked to different elements, also several different handlers can be attached to one element.
+Only full duplication the pair handler-element is not allowed.
+
+More detailed information is available on [url=https://github.com/vpoteryaev/CS-PanelHook]GitHub[/url]
+
+Want to encourage? [url=https://www.paypal.me/vpoteryaev]PayPal[/url] THANKS in advance!!! ;)
+
+Sorry for my English.
