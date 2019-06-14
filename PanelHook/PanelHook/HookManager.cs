@@ -175,5 +175,11 @@ namespace PanelHook
             }
             hooksPanel.Show();
         }
+
+        internal static void CleanData()
+        {
+            OnUnloading();
+            OnReleased();
+        }
     }
 }

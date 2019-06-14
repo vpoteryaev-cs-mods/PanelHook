@@ -6,5 +6,9 @@ namespace PanelHook
     {
         public string Name => "Panel Hook";
         public string Description => "Allows to attach your own mouse click handler to any element derived from the UIComponent";
+        public void OnSettingsUI(UIHelperBase helper)
+        {
+            UI.Settings.OnSettingsUI(helper);
+        }
     }
 }
