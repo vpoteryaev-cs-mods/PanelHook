@@ -102,6 +102,6 @@ namespace MyMod
 ```
 All feedbacks and comments are welcome.
 
-Want to encourage? [PayPal](https://www.paypal.me/vpoteryaev]PayPal). THANKS in advance!!! ;)
+Want to encourage? [PayPal](https://www.paypal.me/vpoteryaev). THANKS in advance!!! ;)
 
 Sorry for my English.
