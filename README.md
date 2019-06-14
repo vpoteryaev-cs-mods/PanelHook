@@ -19,7 +19,7 @@ As a result, when you click on an element, the panel will appear with the drop-d
 One handler can be hooked to different elements, also several different handlers can be attached to one element.
 Only full duplication the pair handler-element is not allowed.
 
-The followeng functions provide an interface:
+The followed functions provide an interface:
 ```
 public static bool IsHooked(MouseEventHandler handlerPointer, object obj)    - check that the couple handler-element has already been registered;
 public static void AddHook(MouseEventHandler ptr, object obj, string desc)   - hooking itself 
@@ -102,6 +102,6 @@ namespace MyMod
 ```
 All feedbacks and comments are welcome.
 
-Want to encourage? [PayPal](https://www.paypal.me/vpoteryaev]PayPal) THANKS in advance!!! ;)
+Want to encourage? [PayPal](https://www.paypal.me/vpoteryaev]PayPal). THANKS in advance!!! ;)
 
 Sorry for my English.
