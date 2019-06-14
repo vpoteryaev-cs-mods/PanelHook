@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PanelHook
 {
-    class HookManager
+    public class HookManager
     {
         /*
          *
