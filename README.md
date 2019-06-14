@@ -1,13 +1,13 @@
-#Panel Hook (beta) for modders
+# Panel Hook (beta) for modders
 
-##Forewords
+## Forewords
 When writing your own mod, too many time is spent on placing and precise positioning, let's say, buttons on the building information panel.
 Then may happens that another mod also places something in the same panel, overlapping your changes ... or the developers have changed something ... etc.
 As an example, when using very useful ModTools, it's annoys sometimes that the buttons and labels of the mod on the panels overlap with the other labels, and sometimes the interaction elements.
 
 This mod will allow you to minimize your time-wasting, and unify the interaction of users with different mods, without changing anything in the panels.
 
-##Purpose
+## Purpose
 With this mod, although called **Panel**Hook, you'll be able to attach your own mouse click handler to any element derived from the UIComponent.
 
 You just have to define the element you are interested and provide the PanelHook with the following:
