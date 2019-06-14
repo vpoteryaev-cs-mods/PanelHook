@@ -100,6 +100,10 @@ namespace MyMod
     }
 }
 ```
+## Uninstall
+Just in case. To be sure that before uninstalling the mod data will not remain in the game save, before saving you should press the "Clean Data" button in the mod options, save, exit and delete the mod
+
+
 All feedbacks and comments are welcome.
 
 Want to encourage? [PayPal](https://www.paypal.me/vpoteryaev). THANKS in advance!!! ;)
