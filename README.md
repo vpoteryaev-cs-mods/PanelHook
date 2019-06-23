@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/vpoteryaev-cs-mods/PanelHook/_apis/build/status/vpoteryaev-cs-mods.PanelHook?branchName=master)](https://dev.azure.com/vpoteryaev-cs-mods/PanelHook/_build/latest?definitionId=1&branchName=master)
 # Panel Hook (beta) for modders
 
 ## Forewords
