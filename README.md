@@ -4,7 +4,7 @@
 ## Forewords
 When writing your own mod, too many time is spent on placing and precise positioning, let's say, buttons on the building information panel.
 Then may happens that another mod also places something in the same panel, overlapping your changes ... or the developers have changed something ... etc.
-As an example, when using very useful ModTools, it's annoys sometimes that the buttons and labels of the mod on the panels overlap with the other labels, and sometimes the interaction elements.
+As an example, several mods are hooking to the same element. By mouse click all mods will perform their actions, but the user wants exactly only one action from a certain mod to be performed... 
 
 This mod will allow you to minimize your time-wasting, and unify the interaction of users with different mods, without changing anything in the panels.
 
