@@ -64,7 +64,7 @@ namespace PanelHook.UI
 
         private void Init()
         {
-            backgroundSprite = "MenuPanel2"; //????????????
+            backgroundSprite = "MenuPanel2";
             opacity = 0.9f;
             autoLayout = true;
             autoLayoutDirection = LayoutDirection.Vertical;

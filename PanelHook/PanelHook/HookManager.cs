@@ -2,6 +2,7 @@
 using System.Linq;
 using ColossalFramework.UI;
 using UnityEngine;
+using System;
 
 namespace PanelHook
 {
@@ -20,43 +21,12 @@ namespace PanelHook
 
         public static void AddHook(MouseEventHandler ptr, object obj, string desc)
         {
-            if (_hooksPtrDict.TryGetValue(ptr, out HookedObjects hookedObjects))
-            {
-                if (hookedObjects.IsHooked(obj))
-                {
-#if DEBUG
-                    Debug.LogErrorFormat("PanelHook: HookManager.AddHook() - The object \"{0}\" is already hooked by pointer \"{1}\"", ((UIComponent)obj).name, ptr);
-#endif
-                    return;
-                }
-#if DEBUG
-                Debug.LogFormat("PanelHook: HookManager.AddHook() - add new object {0} to registered handler {1}", ((UIComponent)obj).name, ptr);
-#endif
-                hookedObjects.AddObject(obj, desc);
-            }
-            else
-            {
-#if DEBUG
-                Debug.LogFormat("PanelHook: HookManager.AddHook() - add object {0} to handler {1}", ((UIComponent)obj).name, ptr);
-#endif
-                hookedObjects = new HookedObjects();
-                hookedObjects.AddObject(obj, desc);
-                _hooksPtrDict.Add(ptr, hookedObjects);
-            }
+            _AddHook(ptr, obj, desc);
+        }
 
-            int numHooks;
-
-            IEnumerable<object> query =
-                from qHookedObjects in _hooksPtrDict.Values
-                from qObjects in qHookedObjects.GetObjects()
-                where qObjects.Equals(obj)
-                select qObjects;
-            numHooks = query.Count();
-#if DEBUG
-            Debug.LogFormat("PanelHook: HookManager.AddHook() - numHooks = {0}", numHooks);
-#endif
-            if (numHooks == 1)
-                SetHandler(obj);
+        public static void AddHook(MouseEventHandler ptr, object obj, string desc, Func<bool> checker)
+        {
+            _AddHook(ptr, obj, desc, checker);
         }
 
         public static void RemoveHook(MouseEventHandler ptr, object obj)
@@ -83,7 +53,10 @@ namespace PanelHook
                 {
                     hookedObjects.RemoveObject(obj);
                     if (hookedObjects.IsEmpty())
+                    {
                         _hooksPtrDict.Remove(ptr);
+                        _checkersDict.Remove(ptr);
+                    }
                 }
             }
         }
@@ -96,23 +69,19 @@ namespace PanelHook
 
         internal static PanelHook.UI.HooksPanel hooksPanel;
 
-        static readonly Dictionary<MouseEventHandler, HookedObjects> _hooksPtrDict;
-
-        //private static readonly bool _isLoaded;
-        //public static bool IsLoaded
-        //{
-        //    get => _isLoaded;
-        //}
+        private static readonly Dictionary<MouseEventHandler, HookedObjects> _hooksPtrDict;
+        private static readonly Dictionary<MouseEventHandler, Func<bool>> _checkersDict;
 
         static HookManager()
         {
             _hooksPtrDict = new Dictionary<MouseEventHandler, HookedObjects>();
-            //    _isLoaded = true;
+            _checkersDict = new Dictionary<MouseEventHandler, Func<bool>>();
         }
 
         internal static void OnCreated()
         {
             _hooksPtrDict.Clear();
+            _checkersDict.Clear();
         }
 
         internal static void OnLoaded()
@@ -137,6 +106,50 @@ namespace PanelHook
         internal static void OnReleased()
         {
             _hooksPtrDict.Clear();
+            _checkersDict.Clear();
+        }
+
+        private static void _AddHook(MouseEventHandler ptr, object obj, string desc, Func<bool> checker = null)
+        {
+            if (_hooksPtrDict.TryGetValue(ptr, out HookedObjects hookedObjects))
+            {
+                if (hookedObjects.IsHooked(obj))
+                {
+#if DEBUG
+                    Debug.LogErrorFormat("PanelHook: HookManager.AddHook() - The object \"{0}\" is already hooked by pointer \"{1}\"", ((UIComponent)obj).name, ptr);
+#endif
+                    return;
+                }
+#if DEBUG
+                Debug.LogFormat("PanelHook: HookManager.AddHook() - add new object {0} to registered handler {1}", ((UIComponent)obj).name, ptr);
+#endif
+                hookedObjects.AddObject(obj, desc);
+            }
+            else
+            {
+#if DEBUG
+                Debug.LogFormat("PanelHook: HookManager.AddHook() - add object {0} to handler {1}", ((UIComponent)obj).name, ptr);
+#endif
+                hookedObjects = new HookedObjects();
+                hookedObjects.AddObject(obj, desc);
+                _hooksPtrDict.Add(ptr, hookedObjects);
+                if(checker != null)
+                    _checkersDict.Add(ptr, checker);
+            }
+
+            int numHooks;
+
+            IEnumerable<object> query =
+                from qHookedObjects in _hooksPtrDict.Values
+                from qObjects in qHookedObjects.GetObjects()
+                where qObjects.Equals(obj)
+                select qObjects;
+            numHooks = query.Count();
+#if DEBUG
+            Debug.LogFormat("PanelHook: HookManager.AddHook() - numHooks = {0}", numHooks);
+#endif
+            if (numHooks == 1)
+                SetHandler(obj);
         }
 
         private static void SetHandler(object obj)
@@ -166,14 +179,24 @@ namespace PanelHook
             hooksPanel.pivot = sender.pivot;
             hooksPanel.position = sender.position;
 
+            bool checksPassed = false;
             foreach (KeyValuePair<MouseEventHandler, HookedObjects> kvPair in _hooksPtrDict)
             {
                 if (kvPair.Value.IsHooked(sender))
                 {
+                    if(_checkersDict.TryGetValue(kvPair.Key, out Func<bool> checker))
+                    {
+                        if(!checker())
+                            continue;
+                    }
+                    checksPassed = true;
                     hooksPanel.AddAction(kvPair.Key, kvPair.Value.GetDescription(sender), sender, eventParam);
                 }
             }
-            hooksPanel.Show();
+            if(checksPassed)
+            {
+                hooksPanel.Show();
+            }
         }
 
         internal static void CleanData()

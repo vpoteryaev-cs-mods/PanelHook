@@ -4,7 +4,7 @@ namespace PanelHook
 {
     public class Loader: LoadingExtensionBase
     {
-        private bool initialized;
+        internal static bool initialized = false;
 
         public override void OnCreated(ILoading loading)
         {
@@ -48,6 +48,7 @@ namespace PanelHook
         {
             HookManager.OnLoaded();
             initialized = true;
+            UI.Settings.CleanButton.isEnabled = true;
         }
 
         private void UnloadedCleanup()

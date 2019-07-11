@@ -26,8 +26,17 @@ public static bool IsHooked(MouseEventHandler handlerPointer, object obj)    - c
 public static void AddHook(MouseEventHandler ptr, object obj, string desc)   - hooking itself 
 public static void RemoveHook(MouseEventHandler ptr, object obj)             - unregistering (see the comment inside Cleanup() function of the example)
 ```
+AddHook() function has overrided version:
+```
+public static void AddHook(MouseEventHandler ptr, object obj, string desc, Func<bool> checker) 
+```
+**checker** adds ability to filter handler calls. For example, the handler is hooked to the service building panel's element, but should not be called for all buildings of this type, but only for those that suits the certain criteria.
+This function is called each time before displaying the list of actions when clicking on an element.
+If this function returns false, then the handler will not appear in the action's list.
+
 The following example fully demonstrates the registration of a handler:
 ```
+using System;
 using ICities;
 using ColossalFramework.UI;
 using UnityEngine;
@@ -58,20 +67,20 @@ namespace MyMod
         private void Setup()
         {
             //look for element - "InfoGroupPanel" on "ZonedBuildingWorldInfoPanel"
-			UIComponent ui_object = (UIPanel)UIView.library.Get("ZonedBuildingWorldInfoPanel");
+            UIComponent ui_object = (UIPanel)UIView.library.Get("ZonedBuildingWorldInfoPanel");
             var infoGroupPanel = ui_object?.Find<UIPanel>("InfoGroupPanel");
 
             //simple handler itself
-			handler1 = (sender, e) =>
+            handler1 = (sender, e) =>
             {
                 Debug.LogFormat("PanelHook: Mod 1 --- Action 1: I'm called from {0}", sender.name);
             };
 
             //check that the couple handler-element has not already been registered
-			if (!HookManager.IsHooked(handler1, infoGroupPanel))
+            if (!HookManager.IsHooked(handler1, infoGroupPanel))
             {
                 //hooking
-				HookManager.AddHook(handler1, infoGroupPanel, descr1);
+                HookManager.AddHook(handler1, infoGroupPanel, descr1);
             }
 
             handler2 = (sender, e) =>
@@ -81,9 +90,16 @@ namespace MyMod
 
             if (!HookManager.IsHooked(handler2, infoGroupPanel))
             {
-                HookManager.AddHook(handler2, infoGroupPanel, descr2);
+                HookManager.AddHook(handler2, infoGroupPanel, descr2, MyChecker);
             }
+        }
 
+        private bool MyChecker()
+        {
+            ...
+            if (some_defined_by_you_conditions)
+                return true;
+            return false;
         }
 
         private void Cleanup()
