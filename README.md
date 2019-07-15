@@ -26,7 +26,7 @@ public static bool IsHooked(MouseEventHandler handlerPointer, object obj)    - c
 public static void AddHook(MouseEventHandler ptr, object obj, string desc)   - hooking itself 
 public static void RemoveHook(MouseEventHandler ptr, object obj)             - unregistering (see the comment inside Cleanup() function of the example)
 ```
-AddHook() function has overrided version:
+AddHook() function has overriden version:
 ```
 public static void AddHook(MouseEventHandler ptr, object obj, string desc, Func<bool> checker) 
 ```
